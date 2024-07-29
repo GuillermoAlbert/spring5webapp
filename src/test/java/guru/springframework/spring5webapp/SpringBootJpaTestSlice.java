@@ -5,31 +5,26 @@ import static org.assertj.core.api.AssertionsForClassTypes.*;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
+import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.context.annotation.ComponentScan;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import guru.springframework.spring5webapp.domain.Book;
 import guru.springframework.spring5webapp.repositories.BookRepository;
 
 @RunWith(SpringRunner.class)
-@SpringBootTest
-public class Spring5webappApplicationTests {
+@DataJpaTest
+@ComponentScan(basePackages = {"guru.springframework.spring5webapp.bootstrap"})
+@AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
 
-	@Autowired
-	BookRepository bookRepository;
+public class SpringBootJpaTestSlice {
 
-	@Test
-	public void testBookRepository() {
-		long count = bookRepository.count();
+    @Autowired
+    BookRepository bookRepository;
 
-		assertThat(count).isGreaterThan(0);
-	}
-
-	@Test
-	public void contextLoads() {
-	}
-
-	@Test
+    @Test
     public void testJpaTestSplice() {
         long countBefore = bookRepository.count();
 
@@ -37,7 +32,6 @@ public class Spring5webappApplicationTests {
 
         long countAfter = bookRepository.count();
 
-        assertThat(countBefore).isLessThan(countAfter);
+        assertThat(countAfter).isEqualTo(countBefore + 1);
     }
-
 }
